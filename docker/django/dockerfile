@@ -1,0 +1,22 @@
+FROM python:3.11-alpine
+
+# Bashをインストール
+RUN apk update && apk add bash
+
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
+WORKDIR /app
+
+RUN apk add gcc && \
+    apk add musl-dev && \
+    apk add mariadb-connector-c-dev && \
+    apk add mariadb-dev
+
+COPY /djangoApiApp/requirements.txt /tmp/requirements.txt
+
+RUN pip install --upgrade pip
+
+RUN pip install -r /tmp/requirements.txt
+
+COPY /test_django /app/a

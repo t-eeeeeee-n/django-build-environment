@@ -1,0 +1,38 @@
+version: "3.9"
+
+services:
+  db:
+    image: mysql:8
+    container_name: django-test-db-conatiner
+    environment:
+      MYSQL_ROOT_PASSWORD: ${ROOTPASS}
+      MYSQL_DATABASE: ${DATABASE}
+      MYSQL_USER: ${USERNAME}
+      MYSQL_PASSWORD: ${USERPASS}
+      TZ: 'Asia/Tokyo'
+      LC_ALL: 'ja_JP.UTF-8'
+      LANG: "ja_JP.UTF-8"
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --port=${PORT}
+    volumes:
+      - ./docker/db/data:/var/lib/mysql
+      - ./docker/db/my.cnf:/etc/mysql/conf.d/my.cnf
+    ports:
+      - ${PORT}:${PORT}
+  django:
+    container_name: "django-test-containers"
+    image: "django-test-image"
+    build:
+      context: .
+      dockerfile: docker/django/dockerfile
+    working_dir: /app
+    command: python ./manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./djangoApiApp:/app
+    ports:
+      - "8000:8000"
+    # 環境変数を.envを使って設定
+    env_file:
+      - .env
+    # 先にdbを起動してからappを起動する
+    depends_on:
+      - db

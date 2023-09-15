@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -161,3 +162,5 @@ cython_debug/
 
 db-volumes/
 db.sqlite3/
+docker/db/data
+docker/db/my.cnf
